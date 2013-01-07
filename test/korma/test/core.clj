@@ -5,6 +5,7 @@
         [korma.config])
   (:use [clojure.test]))
 
+(defdb test-db-mysql (mysql {:db "korma" :user "korma" :password "kormapass"}))
 (defdb test-db-opts (postgres {:db "korma" :user "korma" :password "kormapass" :delimiters "" :naming {:fields string/upper-case}}))
 (defdb test-db (postgres {:db "korma" :user "korma" :password "kormapass"}))
 
@@ -204,6 +205,21 @@
             (select users
                    (aggregate (count :*) :cnt :id)
                    (having {:id 5}))))))
+
+
+(defentity users-mysql (database test-db-mysql))
+
+(deftest aggregate-group-mysql
+  (sql-only
+    (are [result query] (= result query)
+      "SELECT COUNT(*) `cnt` FROM `users-mysql` GROUP BY `users-mysql`.`id`"
+      (select users-mysql (aggregate (count :*) :cnt :id))
+
+      "SELECT COUNT(*) `cnt` FROM `users-mysql` GROUP BY `users-mysql`.`id` HAVING (`users-mysql`.`id` = ?)"
+      (select users-mysql
+             (aggregate (count :*) :cnt :id)
+             (having {:id 5})))))
+
 
 (deftest quoting
   (sql-only
