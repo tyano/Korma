@@ -280,7 +280,7 @@
   [query agg alias & [group-by]]
   `(let [q# ~query]
      (bind-query q#
-               (let [res# (fields q# [~(eng/parse-aggregate agg) ~alias])]
+               (let [res# (fields q# [(-> q# ~(eng/parse-aggregate agg)) ~alias])]
                  (if ~group-by
                    (group res# ~group-by)
                    res#)))))
