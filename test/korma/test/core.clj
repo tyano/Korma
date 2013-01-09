@@ -218,7 +218,10 @@
       "SELECT COUNT(*) `cnt` FROM `users-mysql` GROUP BY `users-mysql`.`id` HAVING (`users-mysql`.`id` = ?)"
       (select users-mysql
              (aggregate (count :*) :cnt :id)
-             (having {:id 5})))))
+             (having {:id 5}))
+
+      "SELECT COUNT(`users-mysql`.`id`) `cnt` FROM `users-mysql`"
+      (select users-mysql (aggregate (count :id) :cnt)))))
 
 
 (deftest quoting

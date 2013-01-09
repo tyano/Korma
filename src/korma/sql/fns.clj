@@ -49,7 +49,7 @@
   (let [x (if (keyword? v) (name v) v)]
     (if (= x "*")
       (sql-func "COUNT" (utils/generated x))
-      (sql-func "COUNT" x))))
+      (sql-func "COUNT" v))))
 
 (defmethod agg-count :default [query v]
   "Default implementation for other than MySQL.
